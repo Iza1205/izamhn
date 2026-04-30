@@ -1,0 +1,231 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model GuestbookEntry {
+  id         Int              @id @default(autoincrement())
+  message    String
+  name       String
+  email      String
+  image      String?
+  created_at DateTime         @default(now())
+  replies    GuestbookReply[]
+
+  @@index([created_at])
+}
+
+model GuestbookReply {
+  id         Int            @id @default(autoincrement())
+  message    String
+  name       String
+  email      String
+  image      String?
+  created_at DateTime       @default(now())
+  entry_id   Int
+  entry      GuestbookEntry @relation(fields: [entry_id], references: [id], onDelete: Cascade)
+
+  @@index([entry_id])
+}
+
+model Content {
+  id         Int      @id @default(autoincrement())
+  title      String?
+  thumbnail  String
+  views      Int      @default(0)
+  link       String
+  platform   String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model ProjectReaction {
+  id         Int      @id @default(autoincrement())
+  slug       String
+  type       String
+  count      Int      @default(0)
+  updated_at DateTime @default(now())
+
+  @@unique([slug, type])
+  @@index([slug])
+}
+
+model RateCardPackage {
+  id        Int      @id @default(autoincrement())
+  platform  String
+  name      String
+  price     String
+  priceNote String   @default("per konten")
+  featured  Boolean  @default(false)
+  features  String[]
+  order     Int      @default(0)
+}
+
+model RateCardStat {
+  id       Int    @id @default(autoincrement())
+  platform String
+  value    String
+  label    String
+  sub      String
+  order    Int    @default(0)
+}
+
+model RateCardTopContent {
+  id       Int    @id @default(autoincrement())
+  platform String
+  views    String
+  label    String
+  order    Int    @default(0)
+}
+
+model contentmeta {
+  id         Int      @id @default(autoincrement())
+  slug       String   @unique
+  type       String
+  views      Int      @default(0)
+  updated_at DateTime @default(now())
+}
+
+model products {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       String?
+  image       String?
+  link        String
+  category    String?
+  layout      String   @default("full")
+  is_show     Boolean  @default(true)
+  sort_order  Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now())
+}
+
+model projects {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  description String
+  image       String
+  link_demo   String?
+  link_github String?
+  stacks      String
+  is_show     Boolean  @default(true)
+  updated_at  DateTime @default(now())
+  content     String?
+  is_featured Boolean  @default(false)
+}
+
+// ─────────────────────────────────────────────────────────────
+// BLOG
+// ─────────────────────────────────────────────────────────────
+
+model Blog {
+  id           Int       @id @default(autoincrement())
+  title        String
+  slug         String    @unique
+  thumbnail    String
+  content      String    @db.Text
+  excerpt      String?   @db.Text
+  status       String    @default("draft")
+  views        Int       @default(0)
+  read_time    Int       @default(0)
+  published_at DateTime?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @default(now())
+
+  tags BlogTag[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([published_at])
+}
+
+model BlogTag {
+  id      Int    @id @default(autoincrement())
+  blog_id Int
+  name    String
+  slug    String
+  blog    Blog   @relation(fields: [blog_id], references: [id], onDelete: Cascade)
+
+  @@index([blog_id])
+  @@index([slug])
+}
+
+// ─────────────────────────────────────────────────────────────
+// PORTAL — Client Portal
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id         String   @id @default(cuid())
+  name       String
+  email      String   @unique
+  image      String?
+  password   String?
+  role       String   @default("client")
+  created_at DateTime @default(now())
+
+  orders       Order[]
+  supportChats SupportChat[]
+}
+
+model PortalProduct {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?  @db.Text
+  price       Int
+  image       String?
+  category    String
+  file_url    String?
+  is_active   Boolean  @default(true)
+  sort_order  Int      @default(0)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now())
+
+  orders Order[]
+}
+
+model Order {
+  id         String   @id @default(cuid())
+  user_id    String
+  product_id Int
+  status     String   @default("pending")
+  amount     Int
+  note       String?
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  user    User          @relation(fields: [user_id], references: [id])
+  product PortalProduct @relation(fields: [product_id], references: [id])
+  invoice Invoice?
+
+  @@index([user_id])
+  @@index([status])
+}
+
+model Invoice {
+  id         String    @id @default(cuid())
+  order_id   String    @unique
+  amount     Int
+  status     String    @default("unpaid")
+  paid_at    DateTime?
+  created_at DateTime  @default(now())
+
+  order Order @relation(fields: [order_id], references: [id])
+}
+
+model SupportChat {
+  id         Int      @id @default(autoincrement())
+  user_id    String
+  message    String   @db.Text
+  is_admin   Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+  @@index([created_at])
+}

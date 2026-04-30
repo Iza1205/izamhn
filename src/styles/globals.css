@@ -1,0 +1,183 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── iOS Design Tokens ── */
+:root {
+  --bg-primary:   #ffffff;
+  --bg-secondary: #f2f2f7;
+  --bg-tertiary:  #e5e5ea;
+  --bg-grouped:   #f2f2f7;
+  --bg-card:      #ffffff;
+  --bg-input:     #e5e5ea;
+
+  --text-primary:   #000000;
+  --text-secondary: #3c3c43;
+  --text-tertiary:  #8e8e93;
+  --text-quaternary:#aeaeb2;
+
+  --separator:      rgba(60,60,67,0.29);
+  --separator-light:rgba(60,60,67,0.12);
+
+  --fill-primary:   rgba(120,120,128,0.2);
+  --fill-secondary: rgba(120,120,128,0.16);
+
+  --accent: #000000;
+  --ios-blue:  #007AFF;
+  --ios-green: #34C759;
+  --ios-red:   #FF3B30;
+}
+
+.dark {
+  --bg-primary:   #000000;
+  --bg-secondary: #1c1c1e;
+  --bg-tertiary:  #2c2c2e;
+  --bg-grouped:   #000000;
+  --bg-card:      #1c1c1e;
+  --bg-input:     #2c2c2e;
+
+  --text-primary:    #ffffff;
+  --text-secondary:  rgba(235,235,245,0.75);
+  --text-tertiary:   rgba(235,235,245,0.45);
+  --text-quaternary: rgba(235,235,245,0.22);
+
+  --separator:       rgba(84,84,88,0.65);
+  --separator-light: rgba(84,84,88,0.36);
+
+  --fill-primary:   rgba(120,120,128,0.36);
+  --fill-secondary: rgba(120,120,128,0.32);
+
+  --accent: #ffffff;
+}
+
+/* ── Base ── */
+* { box-sizing: border-box; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: inherit;
+  background-color: var(--bg-grouped);
+  color: var(--text-primary);
+  transition: background-color 0.25s, color 0.25s;
+  min-height: 100vh;
+}
+
+/* ── iOS grouped list ── */
+.ios-group {
+  background: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ios-row {
+  display: flex;
+  align-items: center;
+  padding: 11px 16px;
+  gap: 12px;
+  border-bottom: 0.5px solid var(--separator-light);
+}
+.ios-row:last-child { border-bottom: none; }
+
+/* ── Cards ── */
+.ios-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* ── Navigation blur ── */
+.nav-blur {
+  background: color-mix(in srgb, var(--bg-grouped) 85%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 0.5px solid var(--separator-light);
+}
+
+/* ── Inputs ── */
+.ios-input {
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 15px;
+  outline: none;
+  width: 100%;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.ios-input::placeholder { color: var(--text-tertiary); }
+.ios-input:focus { background: var(--bg-tertiary); }
+
+/* ── Buttons ── */
+.ios-btn-primary {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 10px;
+  padding: 11px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+.ios-btn-primary:hover { opacity: 0.85; }
+.ios-btn-primary:active { opacity: 0.7; transform: scale(0.98); }
+
+.ios-btn-secondary {
+  background: var(--fill-secondary);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 10px;
+  padding: 11px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.ios-btn-secondary:hover { background: var(--bg-tertiary); }
+
+.ios-btn-ghost {
+  background: none;
+  border: none;
+  color: var(--ios-blue);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+.ios-btn-ghost:hover { opacity: 0.75; }
+
+/* ── Section label ── */
+.section-label {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0 4px;
+  margin-bottom: 8px;
+}
+
+/* ── Pill tag ── */
+.ios-tag {
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--fill-secondary);
+  color: var(--text-secondary);
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 3px; }
